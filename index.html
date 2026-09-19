@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DasiYaOfficial | Premium Minecraft Builder & Server Creator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,600;0,700;1,700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        redmc: {
+                            500: '#ff3333',
+                            600: '#dc2626',
+                            700: '#b91c1c',
+                            800: '#991b1b',
+                            dark: '#0a0505',
+                            panel: '#140a0a',
+                            border: '#2a1212',
+                            gold: '#ffaa00'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        gamer: ['Chakra Petch', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .font-gamer {
+            font-family: 'Chakra Petch', sans-serif;
+        }
+        .glow-red-text {
+            text-shadow: 0 0 15px rgba(255, 51, 51, 0.7);
+        }
+        .glow-red-box {
+            box-shadow: 0 0 25px rgba(255, 51, 51, 0.25);
+        }
+        .glow-red-box-hover:hover {
+            box-shadow: 0 0 35px rgba(255, 51, 51, 0.45);
+        }
+        .bg-red-grid {
+            background-size: 32px 32px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 51, 51, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 51, 51, 0.05) 1px, transparent 1px);
+        }
+        
+        /* Particle Ember Effect */
+        @keyframes floatEmber {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        .ember {
+            position: absolute;
+            background-color: #ff3333;
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 8px #ff3333;
+        }
+
+        /* Equalizer Animation for Sound Toggle */
+        .eq-bar {
+            width: 3px;
+            background-color: #ff3333;
+            border-radius: 2px;
+            animation: bounce 0.8s ease-in-out infinite alternate;
+        }
+        .eq-bar:nth-child(1) { height: 16px; animation-delay: 0.1s; }
+        .eq-bar:nth-child(2) { height: 10px; animation-delay: 0.3s; }
+        .eq-bar:nth-child(3) { height: 20px; animation-delay: 0.2s; }
+        .eq-bar:nth-child(4) { height: 12px; animation-delay: 0.4s; }
+
+        @keyframes bounce {
+            0% { transform: scaleY(0.3); }
+            100% { transform: scaleY(1.1); }
+        }
+    </style>
+</head>
+<body class="bg-redmc-dark text-gray-100 font-sans bg-red-grid selection:bg-redmc-500 selection:text-white min-h-screen flex flex-col relative overflow-x-hidden">
+
+    <div id="loader-screen" class="fixed inset-0 z-50 bg-black flex flex-col items-center justify-center p-4 transition-opacity duration-700">
+        <div class="relative mb-6">
+            <div class="w-32 h-32 rounded-2xl bg-gradient-to-br from-redmc-600 to-black p-1 border-2 border-redmc-500 shadow-2xl glow-red-box overflow-hidden flex items-center justify-center animate-pulse">
+                <img src="loading.png" alt="DasiYaOfficial Preloader Avatar" class="w-full h-full object-cover object-top" />
+            </div>
+            <div class="absolute -bottom-2 -right-2 bg-redmc-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded font-gamer border border-redmc-500 uppercase">
+                Creator
+            </div>
+        </div>
+
+        <h1 class="text-2xl sm:text-3xl font-extrabold font-gamer text-white tracking-widest uppercase mb-1">
+            <span class="bg-gradient-to-r from-redmc-500 via-red-400 to-amber-500 bg-clip-text text-transparent glow-red-text">DasiYaOfficial</span>
+        </h1>
+        <p id="loader-status" class="text-xs font-gamer text-gray-400 uppercase tracking-wider mb-6">Loading Minecraft World & Systems...</p>
+
+        <!-- Progress Bar Container -->
+        <div class="w-full max-w-xs sm:max-w-md bg-redmc-panel border border-redmc-border rounded-full h-4 p-0.5 overflow-hidden mb-6 relative">
+            <div id="loader-bar" class="bg-gradient-to-r from-redmc-700 via-redmc-500 to-amber-500 h-full rounded-full transition-all duration-300 w-0 shadow-lg"></div>
+        </div>
+
+        <!-- Start / Enter Button Overlay (required for Browser Sound Autoplay permissions) -->
+        <button id="enter-btn" onclick="startExperience()" class="hidden bg-gradient-to-r from-redmc-600 to-redmc-500 hover:from-redmc-500 hover:to-red-400 text-white font-extrabold px-8 py-3.5 rounded-xl shadow-2xl hover:scale-105 transition-all font-gamer uppercase tracking-wider border border-redmc-500 flex items-center gap-3">
+            <i class="fa-solid fa-play text-amber-400"></i> Click To Vist Site
+        </button>
+    </div>
+
+    <div id="audio-control" class="fixed bottom-6 left-6 z-40 hidden flex items-center gap-3 bg-black/80 backdrop-blur-md border border-redmc-500/60 p-2.5 rounded-2xl shadow-2xl">
+        <button onclick="toggleAudio()" id="audio-toggle-btn" class="w-10 h-10 rounded-xl bg-redmc-600 hover:bg-redmc-500 text-white flex items-center justify-center transition-colors border border-redmc-500">
+            <i id="audio-icon" class="fa-solid fa-music text-sm"></i>
+        </button>
+        <div class="pr-2 hidden sm:block">
+            <div class="text-[11px] font-bold text-white font-gamer leading-none">Chiptune Ambience</div>
+            <div id="audio-status-text" class="text-[9px] text-redmc-500 font-gamer uppercase">Playing BGM</div>
+        </div>
+        <!-- Animated Equalizer Bars -->
+        <div id="equalizer" class="flex items-end gap-1 h-5 px-1">
+            <div class="eq-bar"></div>
+            <div class="eq-bar"></div>
+            <div class="eq-bar"></div>
+            <div class="eq-bar"></div>
+        </div>
+    </div>
+
+    <div id="embers-container" class="fixed inset-0 pointer-events-none z-0 overflow-hidden"></div>
+
+    <header class="sticky top-0 z-40 bg-redmc-dark/90 backdrop-blur-md border-b border-redmc-border/80 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-redmc-500 to-redmc-800 p-0.5 shadow-lg group-hover:scale-105 transition-transform overflow-hidden border border-redmc-500">
+                    <img src="logo1.png" alt="DasiYaOfficial Skin" class="w-full h-full object-cover object-top rounded-lg" />
+                </div>
+                <div>
+                    <span class="text-xl font-bold font-gamer tracking-wider bg-gradient-to-r from-redmc-500 via-red-400 to-amber-500 bg-clip-text text-transparent glow-red-text">DasiYaOfficial</span>
+                    <span class="block text-xs text-gray-400 -mt-1 font-sans">Minecraft Builder & Server Creator</span>
+                </div>
+            </a>
+
+            <nav class="hidden md:flex items-center space-x-7 font-medium text-sm">
+                <a href="#about" class="text-gray-300 hover:text-redmc-500 transition-colors">About</a>
+                <a href="#services" class="text-gray-300 hover:text-redmc-500 transition-colors">Services</a>
+                <a href="#portfolio" class="text-gray-300 hover:text-redmc-500 transition-colors">Portfolio</a>
+                <a href="#calculator" class="text-gray-300 hover:text-redmc-500 transition-colors">Price Estimator</a>
+                <a href="#pricing" class="text-gray-300 hover:text-redmc-500 transition-colors">Packages</a>
+                <a href="#contact" class="bg-gradient-to-r from-redmc-600 to-redmc-500 hover:from-redmc-500 hover:to-red-400 text-white font-extrabold px-5 py-2.5 rounded-lg shadow-md hover:shadow-redmc-500/40 transition-all hover:scale-105 flex items-center gap-2 font-gamer uppercase tracking-wide border border-redmc-500/50">
+                    <i class="fa-solid fa-fire"></i> Order Now
+                </a>
+            </nav>
+
+            <button id="mobile-menu-btn" class="md:hidden text-gray-300 hover:text-white p-2 rounded-lg focus:outline-none" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars text-2xl text-redmc-500"></i>
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-redmc-panel border-b border-redmc-border px-4 pt-3 pb-6 space-y-3">
+            <a href="#about" class="block py-2 text-gray-300 hover:text-redmc-500 border-b border-redmc-border/40">About DasiYaOfficial</a>
+            <a href="#services" class="block py-2 text-gray-300 hover:text-redmc-500 border-b border-redmc-border/40">Services</a>
+            <a href="#portfolio" class="block py-2 text-gray-300 hover:text-redmc-500 border-b border-redmc-border/40">Build Portfolio</a>
+            <a href="#calculator" class="block py-2 text-gray-300 hover:text-redmc-500 border-b border-redmc-border/40">Price Estimator</a>
+            <a href="#pricing" class="block py-2 text-gray-300 hover:text-redmc-500 border-b border-redmc-border/40">Pricing Packages</a>
+            <a href="#contact" class="block text-center mt-4 bg-redmc-600 hover:bg-redmc-500 text-white font-extrabold py-3 rounded-lg shadow-md font-gamer uppercase tracking-wider border border-redmc-500">
+                Contact DasiYaOfficial
+            </a>
+        </div>
+    </header>
+
+    <section class="relative py-16 lg:py-24 overflow-hidden flex items-center justify-center z-10">
+        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[650px] bg-redmc-600/20 rounded-full blur-[150px] pointer-events-none"></div>
+        <div class="absolute bottom-10 right-10 w-[350px] h-[350px] bg-amber-600/15 rounded-full blur-[120px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <div class="lg:col-span-7 text-center lg:text-left space-y-6">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-redmc-panel border border-redmc-500/40 text-redmc-500 font-semibold text-xs sm:text-sm animate-pulse">
+                        <i class="fa-solid fa-crown text-amber-500"></i> DasiYaOfficial Minecraft Studios
+                    </div>
+
+                    <h1 class="text-4xl sm:text-6xl lg:text-6xl font-extrabold font-gamer tracking-tight uppercase leading-tight">
+                        Premium <span class="bg-gradient-to-r from-redmc-500 via-red-400 to-amber-500 bg-clip-text text-transparent glow-red-text">Minecraft Builder</span> & Server Creator
+                    </h1>
+
+                    <p class="text-gray-300 text-base sm:text-lg leading-relaxed font-sans max-w-2xl mx-auto lg:mx-0">
+                        Welcome! I am <strong class="text-white">DasiYaOfficial</strong>. I specialize in building custom Minecraft spawns, lobbies, PvP arenas, and configuring lag-free survival, skyblock, and network servers at affordable rates.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                        <a href="#services" class="w-full sm:w-auto bg-gradient-to-r from-redmc-600 to-redmc-500 hover:from-redmc-500 hover:to-red-400 text-white font-extrabold px-8 py-4 rounded-xl shadow-lg hover:shadow-redmc-500/40 transition-all hover:scale-105 flex items-center justify-center gap-3 font-gamer uppercase tracking-wide border border-redmc-500">
+                            <i class="fa-solid fa-cubes text-xl"></i> Explore Services
+                        </a>
+                        <a href="#contact" class="w-full sm:w-auto bg-redmc-panel hover:bg-redmc-border/80 border border-redmc-border text-white font-bold px-8 py-4 rounded-xl shadow-md transition-all hover:scale-105 flex items-center justify-center gap-3 font-gamer uppercase tracking-wide">
+                            <i class="fa-solid fa-paper-plane text-xl text-redmc-500"></i> Order Now
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4 pt-6 border-t border-redmc-border/60 max-w-lg mx-auto lg:mx-0">
+                        <div class="p-3 bg-redmc-panel/80 rounded-xl border border-redmc-border/60 text-center">
+                            <div class="text-2xl font-extrabold text-redmc-500 font-gamer">100+</div>
+                            <div class="text-xs text-gray-400 mt-0.5">Custom Builds</div>
+                        </div>
+                        <div class="p-3 bg-redmc-panel/80 rounded-xl border border-redmc-border/60 text-center">
+                            <div class="text-2xl font-extrabold text-redmc-500 font-gamer">50+</div>
+                            <div class="text-xs text-gray-400 mt-0.5">Servers Setup</div>
+                        </div>
+                        <div class="p-3 bg-redmc-panel/80 rounded-xl border border-redmc-border/60 text-center">
+                            <div class="text-2xl font-extrabold text-amber-500 font-gamer">100%</div>
+                            <div class="text-xs text-gray-400 mt-0.5">Satisfaction</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 flex justify-center">
+                    <div class="relative group max-w-md w-full">
+                        <div class="absolute -inset-1 bg-gradient-to-r from-redmc-600 via-red-500 to-amber-500 rounded-3xl blur-xl opacity-60 group-hover:opacity-100 transition duration-500"></div>
+                        <div class="relative bg-redmc-panel border-2 border-redmc-500/80 p-4 rounded-3xl overflow-hidden glow-red-box">
+                            <div class="relative rounded-2xl overflow-hidden bg-black aspect-square flex items-center justify-center">
+                                <img src="logo1.png" alt="DasiYaOfficial Skin Showcase" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                <div class="absolute inset-0 bg-gradient-to-t from-redmc-dark via-transparent to-transparent opacity-80"></div>
+                                <div class="absolute bottom-4 left-4 right-4 bg-black/80 backdrop-blur-md p-3 rounded-xl border border-redmc-500/50 flex items-center justify-between">
+                                    <div>
+                                        <div class="text-xs text-redmc-500 font-bold uppercase font-gamer tracking-wider">Official Avatar</div>
+                                        <div class="text-sm font-extrabold text-white font-gamer">DasiYaOfficial</div>
+                                    </div>
+                                    <span class="px-2.5 py-1 bg-redmc-600 text-white text-[10px] font-bold rounded-md font-gamer uppercase"><i class="fa-solid fa-check-double mr-1"></i> Verified</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-20 bg-redmc-panel/50 border-y border-redmc-border/80 z-10 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="relative group">
+                    <div class="bg-redmc-panel border border-redmc-border p-8 rounded-2xl text-center relative overflow-hidden">
+                        <div class="w-40 h-40 mx-auto mb-6 rounded-2xl bg-gradient-to-tr from-red-950 to-black p-1 border-2 border-redmc-500 flex items-center justify-center shadow-xl overflow-hidden">
+                            <img src="logo1.png" alt="DasiYaOfficial Avatar" class="w-full h-full object-cover object-top rounded-xl" />
+                        </div>
+                        <h3 class="text-2xl font-bold font-gamer text-white uppercase tracking-wide">DasiYaOfficial</h3>
+                        <p class="text-redmc-500 font-medium text-sm mt-1 font-gamer uppercase">Master Architect & Systems Specialist</p>
+                        
+                        <div class="mt-6 flex flex-wrap justify-center gap-2">
+                            <span class="px-3 py-1 bg-redmc-dark border border-redmc-border text-xs rounded-full text-gray-300">WorldEdit / Axiom</span>
+                            <span class="px-3 py-1 bg-redmc-dark border border-redmc-border text-xs rounded-full text-gray-300">Paper & Purpur</span>
+                            <span class="px-3 py-1 bg-redmc-dark border border-redmc-border text-xs rounded-full text-gray-300">Geyser Crossplay</span>
+                            <span class="px-3 py-1 bg-redmc-dark border border-redmc-border text-xs rounded-full text-gray-300">Velocity Proxy</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="inline-block px-3 py-1 bg-redmc-500/10 text-redmc-500 border border-redmc-500/30 rounded-md text-sm font-semibold uppercase tracking-wider font-gamer">
+                        About DasiYaOfficial
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-bold font-gamer uppercase leading-tight">
+                        Crafting High Quality Minecraft Experience
+                    </h2>
+                    <p class="text-gray-300 leading-relaxed">
+                        Hey! I'm <strong class="text-white">DasiYaOfficial</strong>, a dedicated Minecraft Builder and Server Creator. I help server owners transform raw ideas into thriving, fully functional Minecraft servers with beautiful custom builds and optimized server configurations.
+                    </p>
+                    <p class="text-gray-300 leading-relaxed">
+                        Whether you need a custom Spawn build, an entire Skyblock island network, a PvP arena, or complete LuckPerms & Economy setups, I deliver top-notch work at prices that suit your budget.
+                    </p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                        <div class="flex items-start gap-3">
+                            <i class="fa-solid fa-fire text-redmc-500 text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-white text-sm">Unique Red-Hot Designs</h4>
+                                <p class="text-xs text-gray-400">Eye-catching build structures with detailed aesthetics.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fa-solid fa-bolt text-redmc-500 text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-white text-sm">Lag-Free Server Configs</h4>
+                                <p class="text-xs text-gray-400">High TPS performance & memory leak protection.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fa-solid fa-mobile-screen text-redmc-500 text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-white text-sm">Java & Bedrock Crossplay</h4>
+                                <p class="text-xs text-gray-400">Allow mobile, console, and PC players to join together.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fa-solid fa-headset text-redmc-500 text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-white text-sm">Full Aftercare Support</h4>
+                                <p class="text-xs text-gray-400">Free bug fixing and support after project delivery.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="py-20 z-10 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-redmc-500 font-semibold text-sm tracking-wider uppercase font-gamer">Custom Solutions</span>
+                <h2 class="text-3xl sm:text-4xl font-bold font-gamer uppercase mt-2">Services Offered</h2>
+                <p class="text-gray-400 mt-3 text-base">
+                    Choose from my range of custom Minecraft building and full server setup solutions.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-redmc-panel border border-redmc-border rounded-2xl p-6 glow-red-box-hover transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 bg-red-950/80 border border-redmc-500/50 rounded-xl flex items-center justify-center text-redmc-500 text-2xl mb-6">
+                            <i class="fa-solid fa-cubes"></i>
+                        </div>
+                        <h3 class="text-xl font-bold font-gamer text-white mb-3">Custom Minecraft Builds</h3>
+                        <p class="text-gray-300 text-sm leading-relaxed mb-6">
+                            Handcrafted high-detail builds tailored specifically to your server concept and theme.
+                        </p>
+                        <ul class="space-y-2.5 text-xs text-gray-300">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-redmc-500"></i> Main Spawns, Lobbies & Hubs</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-redmc-500"></i> Colosseum PvP Arenas & Dungeons</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-redmc-500"></i> Custom Landscapes & Terraforming</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-redmc-500"></i> Medieval, Fantasy, Sci-Fi or Crimson themes</li>
+                        </ul>
+                    </div>
+                    <div class="mt-8 pt-4 border-t border-redmc-border/60 flex items-center justify-between">
+                        <span class="text-redmc-500 font-bold text-sm font-gamer">From $15 / LKR 2,000</span>
+                        <a href="#contact" class="text-xs bg-redmc-dark hover:bg-redmc-600 text-white font-bold px-3 py-2 rounded-lg transition-colors border border-redmc-border font-gamer uppercase">Order Build</a>
+                    </div>
+                </div>
+
+                <div class="bg-redmc-panel border border-redmc-border rounded-2xl p-6 glow-red-box-hover transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 bg-red-950/80 border border-redmc-500/50 rounded-xl flex items-center justify-center text-redmc-500 text-2xl mb-6">
+                            <i class="fa-solid fa-server"></i>
+                        </div>
+                        <h3 class="text-xl font-bold font-gamer text-white mb-3">Complete Server Setup</h3>
+                        <p class="text-gray-300 text-sm leading-relaxed mb-6">
+                            Full server configuration for Survival, Skyblock, Lifesteal, BoxPvP, or Mini-games.
+                        </p>
+                        <ul class="space-y-2.5 text-xs text-gray-300">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-redmc-500"></i> Advanced Plugin Setup & LuckPerms Ranks</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-redmc-500"></i> Economy, Crates, Shops & Webstore Sync</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-redmc-500"></i> Geyser/Floodgate Bedrock Crossplay</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-redmc-500"></i> Anti-Cheat & Exploit Patching</li>
+                        </ul>
+                    </div>
+                    <div class="mt-8 pt-4 border-t border-redmc-border/60 flex items-center justify-between">
+                        <span class="text-redmc-500 font-bold text-sm font-gamer">From $25 / LKR 3,500</span>
+                        <a href="#contact" class="text-xs bg-redmc-dark hover:bg-redmc-600 text-white font-bold px-3 py-2 rounded-lg transition-colors border border-redmc-border font-gamer uppercase">Order Setup</a>
+                    </div>
+                </div>
+
+                <div class="bg-redmc-panel border border-redmc-border rounded-2xl p-6 glow-red-box-hover transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 bg-red-950/80 border border-redmc-500/50 rounded-xl flex items-center justify-center text-redmc-500 text-2xl mb-6">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </div>
+                        <h3 class="text-xl font-bold font-gamer text-white mb-3">Custom UI & Optimization</h3>
+                        <p class="text-gray-300 text-sm leading-relaxed mb-6">
+                            Tailor-made scoreboard UI, animated tablists, custom menus, and lag reduction.
+                        </p>
+                        <ul class="space-y-2.5 text-xs text-gray-300">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-redmc-500"></i> Custom Scoreboards & DeluxeMenus</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-redmc-500"></i> Holograms & Custom NPC Dialogues</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-redmc-500"></i> Performance Tuning & TPS Optimization</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-redmc-500"></i> BungeeCord / Velocity Proxy Sync</li>
+                        </ul>
+                    </div>
+                    <div class="mt-8 pt-4 border-t border-redmc-border/60 flex items-center justify-between">
+                        <span class="text-redmc-500 font-bold text-sm font-gamer">From $10 / LKR 1,500</span>
+                        <a href="#contact" class="text-xs bg-redmc-dark hover:bg-redmc-600 text-white font-bold px-3 py-2 rounded-lg transition-colors border border-redmc-border font-gamer uppercase">Order Custom UI</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="portfolio" class="py-20 bg-redmc-panel/40 border-y border-redmc-border/80 z-10 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                <div>
+                    <span class="text-redmc-500 font-semibold text-sm tracking-wider uppercase font-gamer">Showcase</span>
+                    <h2 class="text-3xl sm:text-4xl font-bold font-gamer uppercase mt-2">DasiYaOfficial's Portfolio</h2>
+                </div>
+                
+                <div class="flex flex-wrap gap-2 mt-6 md:mt-0" id="gallery-filters">
+                    <button data-filter="all" class="filter-btn active px-4 py-2 rounded-lg bg-redmc-600 text-white font-bold text-xs uppercase tracking-wider transition-all font-gamer border border-redmc-500">All Projects</button>
+                    <button data-filter="builds" class="filter-btn px-4 py-2 rounded-lg bg-redmc-panel border border-redmc-border hover:border-redmc-500 text-gray-300 text-xs uppercase tracking-wider transition-all font-gamer">Custom Builds</button>
+                    <button data-filter="servers" class="filter-btn px-4 py-2 rounded-lg bg-redmc-panel border border-redmc-border hover:border-redmc-500 text-gray-300 text-xs uppercase tracking-wider transition-all font-gamer">Server Setups</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="gallery-grid">
+                <div class="gallery-item builds bg-redmc-panel border border-redmc-border rounded-xl overflow-hidden group hover:border-redmc-500/80 transition-all duration-300 cursor-pointer" onclick="openModal('Crimson Castle Spawn', 'Massive 180x180 Crimson Nether/Fantasy themed server spawn with custom trees, NPC stalls, and crates area.', 'CrimsonCastleSpawn.png')">
+                    <div class="relative h-56 bg-black overflow-hidden">
+                        <img src="CrimsonCastleSpawn.png" alt="Crimson Castle Spawn" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-80 group-hover:opacity-100" />
+                        <span class="absolute top-3 left-3 bg-black/80 text-redmc-500 text-xs font-bold px-3 py-1 rounded-md font-gamer border border-redmc-500/40">CUSTOM BUILD</span>
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <span class="bg-redmc-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg font-gamer uppercase border border-redmc-500"><i class="fa-solid fa-expand mr-1"></i> Preview</span>
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <h4 class="font-bold text-lg text-white mb-1 font-gamer">Crimson Castle Spawn</h4>
+                        <p class="text-xs text-gray-400">180x180 High-detail fantasy spawn crafted by DasiYaOfficial.</p>
+                    </div>
+                </div>
+
+                <div class="gallery-item servers bg-redmc-panel border border-redmc-border rounded-xl overflow-hidden group hover:border-redmc-500/80 transition-all duration-300 cursor-pointer" onclick="openModal('Ultimate SMP Server Setup', 'Complete Survival SMP with claims, auction house, custom items, job ranks, and crossplay support.', 'UltimateSMPServerSetup.png')">
+                    <div class="relative h-56 bg-black overflow-hidden">
+                        <img src="UltimateSMPServerSetup.png" alt="SMP Setup" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-80 group-hover:opacity-100" />
+                        <span class="absolute top-3 left-3 bg-black/80 text-redmc-500 text-xs font-bold px-3 py-1 rounded-md font-gamer border border-redmc-500/40">SERVER SETUP</span>
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <span class="bg-redmc-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg font-gamer uppercase border border-redmc-500"><i class="fa-solid fa-expand mr-1"></i> Preview</span>
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <h4 class="font-bold text-lg text-white mb-1 font-gamer">Ultimate SMP Server Setup</h4>
+                        <p class="text-xs text-gray-400">Features Economy, Custom Menus, Claims & Geyser Crossplay.</p>
+                    </div>
+                </div>
+
+                <div class="gallery-item builds bg-redmc-panel border border-redmc-border rounded-xl overflow-hidden group hover:border-redmc-500/80 transition-all duration-300 cursor-pointer" onclick="openModal('Roman Colosseum Arena', 'Roman Colosseum inspired PvP arena with clean sightlines and zero lag geometry.', 'RomanColosseum.png')">
+                    <div class="relative h-56 bg-black overflow-hidden">
+                        <img src="RomanColosseum.png" alt="PvP Arena" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-80 group-hover:opacity-100" />
+                        <span class="absolute top-3 left-3 bg-black/80 text-redmc-500 text-xs font-bold px-3 py-1 rounded-md font-gamer border border-redmc-500/40">PVP ARENA</span>
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <span class="bg-redmc-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg font-gamer uppercase border border-redmc-500"><i class="fa-solid fa-expand mr-1"></i> Preview</span>
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <h4 class="font-bold text-lg text-white mb-1 font-gamer">Roman Colosseum Arena</h4>
+                        <p class="text-xs text-gray-400">Custom arena designed for high FPS and competitive PvP.</p>
+                    </div>
+                </div>
+
+                <div class="gallery-item servers bg-redmc-panel border border-redmc-border rounded-xl overflow-hidden group hover:border-redmc-500/80 transition-all duration-300 cursor-pointer" onclick="openModal('Custom Skyblock Setup', 'Skyblock setup featuring custom minions, island upgrades, shops, and rankups.', 'image.png')">
+                    <div class="relative h-56 bg-black overflow-hidden">
+                        <img src="image.png" alt="Skyblock Setup" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-80 group-hover:opacity-100" />
+                        <span class="absolute top-3 left-3 bg-black/80 text-redmc-500 text-xs font-bold px-3 py-1 rounded-md font-gamer border border-redmc-500/40">SKYBLOCK</span>
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <span class="bg-redmc-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg font-gamer uppercase border border-redmc-500"><i class="fa-solid fa-expand mr-1"></i> Preview</span>
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <h4 class="font-bold text-lg text-white mb-1 font-gamer">Custom Skyblock Setup</h4>
+                        <p class="text-xs text-gray-400">Custom Minions, Island Upgrades, Auction House, and Boss Arenas.</p>
+                    </div>
+                </div>
+
+                <div class="gallery-item builds bg-redmc-panel border border-redmc-border rounded-xl overflow-hidden group hover:border-redmc-500/80 transition-all duration-300 cursor-pointer" onclick="openModal('DasiYaOfficial Signature Realm', 'Special custom project map created directly for DasiYaOfficial branding and events.', 'logo1.png')">
+                    <div class="relative h-56 bg-black overflow-hidden">
+                        <img src="logo1.png" alt="DasiYaOfficial Realm" class="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500 opacity-90 group-hover:opacity-100" />
+                        <span class="absolute top-3 left-3 bg-redmc-600 text-white text-xs font-bold px-3 py-1 rounded-md font-gamer shadow">SIGNATURE BUILD</span>
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <span class="bg-redmc-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg font-gamer uppercase border border-redmc-500"><i class="fa-solid fa-expand mr-1"></i> Preview</span>
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <h4 class="font-bold text-lg text-white mb-1 font-gamer">DasiYaOfficial Signature Realm</h4>
+                        <p class="text-xs text-gray-400">Personal signature build project with flaming effects.</p>
+                    </div>
+                </div>
+
+                <div class="gallery-item servers bg-redmc-panel border border-redmc-border rounded-xl overflow-hidden group hover:border-redmc-500/80 transition-all duration-300 cursor-pointer" onclick="openModal('Lifesteal SMP Setup', 'Hardcore Lifesteal SMP setup with heart recipes, combat logging prevention, and revive beacons.', 'lifesteal.png')">
+                    <div class="relative h-56 bg-black overflow-hidden">
+                        <img src="lifesteal.png" alt="Lifesteal Setup" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 opacity-80 group-hover:opacity-100" />
+                        <span class="absolute top-3 left-3 bg-black/80 text-redmc-500 text-xs font-bold px-3 py-1 rounded-md font-gamer border border-redmc-500/40">LIFESTEAL</span>
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <span class="bg-redmc-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg font-gamer uppercase border border-redmc-500"><i class="fa-solid fa-expand mr-1"></i> Preview</span>
+                        </div>
+                    </div>
+                    <div class="p-5">
+                        <h4 class="font-bold text-lg text-white mb-1 font-gamer">Lifesteal SMP Setup</h4>
+                        <p class="text-xs text-gray-400">Custom heart crafting, combat log prevention, and Discord tickets.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal Lightbox -->
+    <div id="image-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="bg-redmc-panel border border-redmc-500/60 rounded-2xl max-w-3xl w-full overflow-hidden shadow-2xl relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 bg-redmc-dark hover:bg-redmc-600 text-white w-9 h-9 rounded-full flex items-center justify-center transition-colors z-10 border border-redmc-border">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div class="h-80 sm:h-96 w-full overflow-hidden relative bg-black">
+                <img id="modal-img" src="" alt="Modal Image" class="w-full h-full object-cover" />
+            </div>
+            <div class="p-6">
+                <h3 id="modal-title" class="text-2xl font-bold font-gamer text-white mb-2"></h3>
+                <p id="modal-desc" class="text-gray-300 text-sm leading-relaxed mb-6"></p>
+                <div class="flex justify-end">
+                    <a href="#contact" onclick="closeModal()" class="bg-redmc-600 hover:bg-redmc-500 text-white font-bold px-6 py-2.5 rounded-lg text-sm font-gamer uppercase border border-redmc-500">
+                        Order Similar Project
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="calculator" class="py-16 bg-redmc-panel/60 border-y border-redmc-border/80 z-10 relative">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <span class="text-redmc-500 font-semibold text-sm tracking-wider uppercase font-gamer"><i class="fa-solid fa-calculator"></i> Real-time Estimator</span>
+            <h2 class="text-3xl font-bold font-gamer uppercase mt-2 mb-8">Custom Order Price Calculator</h2>
+
+            <div class="bg-redmc-panel border border-redmc-border p-6 sm:p-8 rounded-2xl text-left space-y-6 shadow-2xl">
+                <div>
+                    <label class="block font-bold text-sm text-gray-200 mb-3 font-gamer uppercase">1. Select Primary Service:</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3" id="calc-service-type">
+                        <button type="button" data-val="15" class="calc-type-btn active p-3.5 rounded-xl bg-redmc-dark border-2 border-redmc-500 text-redmc-500 font-semibold text-sm text-center font-gamer">Custom Build Only ($15)</button>
+                        <button type="button" data-val="25" class="calc-type-btn p-3.5 rounded-xl bg-redmc-dark border border-redmc-border text-gray-300 font-semibold text-sm text-center font-gamer">Full Server Setup ($25)</button>
+                        <button type="button" data-val="40" class="calc-type-btn p-3.5 rounded-xl bg-redmc-dark border border-redmc-border text-gray-300 font-semibold text-sm text-center font-gamer">Build + Server Combo ($40)</button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-sm text-gray-200 mb-3 font-gamer uppercase">2. Optional Add-ons:</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <label class="flex items-center gap-3 p-3.5 bg-redmc-dark rounded-xl border border-redmc-border cursor-pointer hover:border-redmc-500/50 transition-colors">
+                            <input type="checkbox" class="calc-addon rounded accent-redmc-500 w-4 h-4" value="8" />
+                            <span class="text-sm">Java + Bedrock Crossplay (+$8)</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3.5 bg-redmc-dark rounded-xl border border-redmc-border cursor-pointer hover:border-redmc-500/50 transition-colors">
+                            <input type="checkbox" class="calc-addon rounded accent-redmc-500 w-4 h-4" value="10" />
+                            <span class="text-sm">Discord Bot Sync & Tickets (+$10)</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3.5 bg-redmc-dark rounded-xl border border-redmc-border cursor-pointer hover:border-redmc-500/50 transition-colors">
+                            <input type="checkbox" class="calc-addon rounded accent-redmc-500 w-4 h-4" value="12" />
+                            <span class="text-sm">Megabuild Size Upgrade (+$12)</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3.5 bg-redmc-dark rounded-xl border border-redmc-border cursor-pointer hover:border-redmc-500/50 transition-colors">
+                            <input type="checkbox" class="calc-addon rounded accent-redmc-500 w-4 h-4" value="5" />
+                            <span class="text-sm">Express 48hr Fast Delivery (+$5)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="pt-6 border-t border-redmc-border/80 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div>
+                        <span class="text-xs text-gray-400 block font-gamer uppercase">Estimated Total Cost:</span>
+                        <div id="calc-total" class="text-3xl font-extrabold text-redmc-500 font-gamer">$15 <span class="text-xs font-sans text-gray-400 font-normal">(approx. LKR 2,250)</span></div>
+                    </div>
+                    <a href="#contact" class="w-full sm:w-auto bg-gradient-to-r from-redmc-600 to-redmc-500 hover:from-redmc-500 hover:to-red-400 text-white font-extrabold px-6 py-3.5 rounded-xl text-center text-sm font-gamer uppercase tracking-wide transition-all shadow-lg border border-redmc-500">
+                        Order With This Estimate <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" class="py-20 z-10 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-redmc-500 font-semibold text-sm tracking-wider uppercase font-gamer">Transparent Rates</span>
+                <h2 class="text-3xl sm:text-4xl font-bold font-gamer uppercase mt-2">Pricing Packages</h2>
+                <p class="text-gray-400 mt-3 text-base">Affordable packages designed for servers of all scales.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="bg-redmc-panel border border-redmc-border rounded-2xl p-8 flex flex-col justify-between hover:border-redmc-500/50 transition-all">
+                    <div>
+                        <div class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2 font-gamer">Basic Tier</div>
+                        <h3 class="text-2xl font-bold font-gamer mb-2">Starter Package</h3>
+                        <p class="text-xs text-gray-400 mb-6">Ideal for small community SMPs and friend servers.</p>
+                        <div class="text-3xl font-extrabold text-redmc-500 mb-6 font-gamer">$25 <span class="text-xs text-gray-400 font-sans font-normal">/ LKR 3,500</span></div>
+                        
+                        <ul class="space-y-3 text-sm text-gray-300 mb-8">
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-redmc-500"></i> Classic Survival or Vanilla+ Setup</li>
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-redmc-500"></i> Up to 10 Essential Plugins Configured</li>
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-redmc-500"></i> Basic Permission Ranks Setup</li>
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-redmc-500"></i> Small Spawn Build (50x50 area)</li>
+                            <li class="flex items-center gap-3 text-gray-600"><i class="fa-solid fa-xmark text-red-800"></i> Crossplay (Bedrock Support)</li>
+                        </ul>
+                    </div>
+                    <a href="#contact" class="w-full text-center py-3 bg-redmc-dark hover:bg-redmc-600 text-white font-bold text-sm rounded-xl border border-redmc-border transition-all font-gamer uppercase">Select Starter</a>
+                </div>
+
+                <div class="bg-gradient-to-b from-redmc-panel to-red-950/80 border-2 border-redmc-500 rounded-2xl p-8 flex flex-col justify-between relative shadow-xl glow-red-box">
+                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-redmc-600 text-white font-extrabold text-xs px-4 py-1 rounded-full uppercase tracking-wider shadow font-gamer border border-redmc-500">
+                        Most Popular
+                    </div>
+                    <div>
+                        <div class="text-xs font-bold uppercase tracking-wider text-amber-400 mb-2 font-gamer">Recommended Combo</div>
+                        <h3 class="text-2xl font-bold font-gamer mb-2">Pro Combo Package</h3>
+                        <p class="text-xs text-gray-400 mb-6">Complete production setup with handcrafted lobby.</p>
+                        <div class="text-3xl font-extrabold text-redmc-500 mb-6 font-gamer">$50 <span class="text-xs text-gray-400 font-sans font-normal">/ LKR 7,500</span></div>
+                        
+                        <ul class="space-y-3 text-sm text-gray-300 mb-8">
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-redmc-500"></i> Skyblock, Lifesteal or SMP Setup</li>
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-redmc-500"></i> 25+ Configured Plugins & Anti-Cheat</li>
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-redmc-500"></i> Java + Bedrock Crossplay Integration</li>
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-redmc-500"></i> Custom Spawn / Lobby Map (100x100 area)</li>
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-redmc-500"></i> Economy, Crates, Shop UI & Ranks</li>
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-redmc-500"></i> Discord Ticket & Chat Bridge Sync</li>
+                        </ul>
+                    </div>
+                    <a href="#contact" class="w-full text-center py-3.5 bg-redmc-600 hover:bg-redmc-500 text-white font-extrabold text-sm rounded-xl shadow-lg transition-all hover:scale-105 font-gamer uppercase tracking-wide border border-redmc-500">Select Pro Combo</a>
+                </div>
+
+                <div class="bg-redmc-panel border border-redmc-border rounded-2xl p-8 flex flex-col justify-between hover:border-redmc-500/50 transition-all">
+                    <div>
+                        <div class="text-xs font-bold uppercase tracking-wider text-amber-400 mb-2 font-gamer">Full Network</div>
+                        <h3 class="text-2xl font-bold font-gamer mb-2">Enterprise Network</h3>
+                        <p class="text-xs text-gray-400 mb-6">Multi-server Bungee/Velocity proxy network setup.</p>
+                        <div class="text-3xl font-extrabold text-redmc-500 mb-6 font-gamer">$100+ <span class="text-xs text-gray-400 font-sans font-normal">/ LKR 15,000+</span></div>
+                        
+                        <ul class="space-y-3 text-sm text-gray-300 mb-8">
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-redmc-500"></i> Velocity / BungeeCord Proxy Setup</li>
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-redmc-500"></i> Multi-Server Network (Hub + Survival + Skyblock)</li>
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-redmc-500"></i> Large Custom Megastructure Spawn Build</li>
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-redmc-500"></i> Webstore (Tebex/CraftingStore) Sync</li>
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-redmc-500"></i> 30 Days Aftercare Technical Support</li>
+                        </ul>
+                    </div>
+                    <a href="#contact" class="w-full text-center py-3 bg-redmc-dark hover:bg-redmc-600 text-white font-bold text-sm rounded-xl border border-redmc-border transition-all font-gamer uppercase">Select Enterprise</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-20 z-10 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="space-y-8">
+                    <div>
+                        <span class="text-redmc-500 font-semibold text-sm tracking-wider uppercase font-gamer">Direct Order</span>
+                        <h2 class="text-3xl sm:text-4xl font-bold font-gamer uppercase mt-2">Contact DasiYaOfficial</h2>
+                        <p class="text-gray-300 mt-4 leading-relaxed">
+                            Ready to start your Minecraft project? Fill out the project form or message me directly on Discord, WhatsApp, or Telegram.
+                        </p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="p-5 bg-redmc-panel border border-redmc-border rounded-xl flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-[#5865F2]/20 text-[#5865F2] rounded-xl flex items-center justify-center text-2xl">
+                                    <i class="fa-brands fa-discord"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-400 uppercase font-gamer">Discord Username</div>
+                                    <div id="discord-tag" class="font-bold text-white font-gamer">dasiyaofficial</div>
+                                </div>
+                            </div>
+                            <button onclick="copyDiscordTag()" class="bg-redmc-dark hover:bg-redmc-border text-xs text-redmc-500 font-semibold px-3.5 py-2 rounded-lg border border-redmc-border transition-colors flex items-center gap-2 font-gamer uppercase">
+                                <i class="fa-regular fa-copy"></i> <span id="copy-btn-text">Copy</span>
+                            </button>
+                        </div>
+
+                        <a href="https://wa.me/94711802613" target="_blank" class="p-5 bg-redmc-panel border border-redmc-border rounded-xl flex items-center justify-between hover:border-redmc-500/60 transition-all block group">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-green-500/20 text-green-400 rounded-xl flex items-center justify-center text-2xl">
+                                    <i class="fa-brands fa-whatsapp"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-400 uppercase font-gamer">WhatsApp Direct Chat</div>
+                                    <div class="font-bold text-white font-gamer">+94 71 180 2613</div>
+                                </div>
+                            </div>
+                            <span class="text-xs text-redmc-500 font-semibold group-hover:translate-x-1 transition-transform font-gamer uppercase">
+                                Chat Now <i class="fa-solid fa-chevron-right ml-1"></i>
+                            </span>
+                        </a>
+
+                        <a href="https://t.me/telegram" target="_blank" class="p-5 bg-redmc-panel border border-redmc-border rounded-xl flex items-center justify-between hover:border-redmc-500/60 transition-all block group">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-sky-500/20 text-sky-400 rounded-xl flex items-center justify-center text-2xl">
+                                    <i class="fa-brands fa-telegram"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-400 uppercase font-gamer">Telegram Contact</div>
+                                    <div class="font-bold text-white font-gamer">@dasiyaofficial</div>
+                                </div>
+                            </div>
+                            <span class="text-xs text-redmc-500 font-semibold group-hover:translate-x-1 transition-transform font-gamer uppercase">
+                                Message <i class="fa-solid fa-chevron-right ml-1"></i>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="bg-redmc-panel border border-redmc-border p-8 rounded-2xl relative shadow-2xl">
+                    <h3 class="text-xl font-bold font-gamer uppercase mb-6 flex items-center gap-2">
+                        <i class="fa-solid fa-paper-plane text-redmc-500"></i> Direct Project Form
+                    </h3>
+
+                    <form id="order-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1 font-gamer uppercase">Your Name / Gamer Tag *</label>
+                            <input type="text" required placeholder="e.g. Alex / EnderGamer" class="w-full bg-redmc-dark border border-redmc-border rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-redmc-500 transition-colors" />
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-300 mb-1 font-gamer uppercase">Discord or Email *</label>
+                                <input type="text" required placeholder="DiscordTag or email@domain.com" class="w-full bg-redmc-dark border border-redmc-border rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-redmc-500 transition-colors" />
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-gray-300 mb-1 font-gamer uppercase">Service Needed *</label>
+                                <select required class="w-full bg-redmc-dark border border-redmc-border rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-redmc-500 transition-colors">
+                                    <option value="build">Custom Build / Map</option>
+                                    <option value="server">Full Server Setup</option>
+                                    <option value="both">Build + Server Combo</option>
+                                    <option value="fix">Optimization / Bug Fix</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1 font-gamer uppercase">Estimated Budget ($ USD or LKR)</label>
+                            <input type="text" placeholder="e.g. $30 - $60 or LKR 5,000" class="w-full bg-redmc-dark border border-redmc-border rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-redmc-500 transition-colors" />
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-300 mb-1 font-gamer uppercase">Project Details *</label>
+                            <textarea rows="4" required placeholder="Describe your Minecraft server idea, requested version, gamemodes, or build theme..." class="w-full bg-redmc-dark border border-redmc-border rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-redmc-500 transition-colors"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full bg-gradient-to-r from-redmc-600 to-redmc-500 hover:from-redmc-500 hover:to-red-400 text-white font-extrabold py-3.5 rounded-xl shadow-lg transition-all hover:scale-[1.01] font-gamer uppercase tracking-wide border border-redmc-500">
+                            Submit Order Inquiry
+                        </button>
+                    </form>
+
+                    <div id="form-alert" class="hidden mt-4 p-3.5 rounded-lg text-xs font-semibold text-center"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="mt-auto bg-black border-t border-redmc-border py-8 text-center text-xs text-gray-400 z-10 relative">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
+                <div class="flex items-center gap-3">
+                    <img src="logo1.png" alt="DasiYaOfficial Icon" class="w-7 h-7 rounded-lg object-cover object-top border border-redmc-500" />
+                    <span class="font-gamer font-bold text-sm text-white">DasiYaOfficial Studios</span>
+                </div>
+                <div class="flex space-x-6 text-gray-400 font-gamer uppercase text-[11px]">
+                    <a href="#about" class="hover:text-redmc-500 transition-colors">About</a>
+                    <a href="#services" class="hover:text-redmc-500 transition-colors">Services</a>
+                    <a href="#portfolio" class="hover:text-redmc-500 transition-colors">Portfolio</a>
+                    <a href="#calculator" class="hover:text-redmc-500 transition-colors">Calculator</a>
+                    <a href="#pricing" class="hover:text-redmc-500 transition-colors">Packages</a>
+                    <a href="#contact" class="hover:text-redmc-500 transition-colors">Contact</a>
+                </div>
+            </div>
+            <p>© 2026 DasiYaOfficial. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Web Audio Synthesizer for Ambient Minecraft/Chiptune Sound Track
+        let audioCtx = null;
+        let isAudioPlaying = false;
+        let synthInterval = null;
+
+        function initSynthesizer() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        // Play relaxing Minecraft-style Chiptune Arpeggiated melody
+        function startChiptuneBGM() {
+            initSynthesizer();
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            isAudioPlaying = true;
+            document.getElementById('audio-control').classList.remove('hidden');
+            document.getElementById('equalizer').style.display = 'flex';
+            document.getElementById('audio-status-text').textContent = 'Playing BGM';
+            document.getElementById('audio-icon').className = 'fa-solid fa-volume-high text-sm';
+
+            // Musical scale notes (C major / A minor ambient game melody frequencies)
+            const notes = [261.63, 329.63, 392.00, 523.25, 440.00, 349.23, 329.63, 293.66];
+            let step = 0;
+
+            if (synthInterval) clearInterval(synthInterval);
+
+            synthInterval = setInterval(() => {
+                if (!isAudioPlaying || !audioCtx) return;
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = 'triangle'; // Soft chiptune retro sound
+                osc.frequency.setValueAtTime(notes[step % notes.length], audioCtx.currentTime);
+
+                gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.6);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.6);
+
+                step++;
+            }, 350);
+        }
+
+        function toggleAudio() {
+            if (isAudioPlaying) {
+                isAudioPlaying = false;
+                if (synthInterval) clearInterval(synthInterval);
+                document.getElementById('equalizer').style.display = 'none';
+                document.getElementById('audio-status-text').textContent = 'Muted';
+                document.getElementById('audio-icon').className = 'fa-solid fa-volume-xmark text-sm';
+            } else {
+                startChiptuneBGM();
+            }
+        }
+
+        // Loading Screen Animation Progress Logic
+        window.addEventListener('load', () => {
+            const bar = document.getElementById('loader-bar');
+            const status = document.getElementById('loader-status');
+            const enterBtn = document.getElementById('enter-btn');
+
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += Math.floor(Math.random() * 25) + 10;
+                if (progress > 100) progress = 100;
+                
+                bar.style.width = progress + '%';
+
+                if (progress === 100) {
+                    clearInterval(progressInterval);
+                    status.textContent = 'World Ready! Click below to start';
+                    enterBtn.classList.remove('hidden');
+                }
+            }, 180);
+        });
+
+        function startExperience() {
+            const loaderScreen = document.getElementById('loader-screen');
+            loaderScreen.classList.add('opacity-0');
+            setTimeout(() => {
+                loaderScreen.classList.add('hidden');
+            }, 700);
+
+            // Trigger background ambient sound
+            startChiptuneBGM();
+        }
+
+        // Ember Floating Background Particles
+        const embersContainer = document.getElementById('embers-container');
+        for (let i = 0; i < 25; i++) {
+            const ember = document.createElement('div');
+            ember.classList.add('ember');
+            const size = Math.random() * 4 + 2;
+            ember.style.width = `${size}px`;
+            ember.style.height = `${size}px`;
+            ember.style.left = `${Math.random() * 100}%`;
+            ember.style.top = `${Math.random() * 100}%`;
+            ember.style.animation = `floatEmber ${Math.random() * 10 + 6}s linear infinite`;
+            ember.style.animationDelay = `${Math.random() * 5}s`;
+            embersContainer.appendChild(ember);
+        }
+
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Portfolio Filter System
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const galleryItems = document.querySelectorAll('.gallery-item');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => {
+                    b.classList.remove('active', 'bg-redmc-600', 'text-white');
+                    b.classList.add('bg-redmc-panel', 'text-gray-300');
+                });
+
+                btn.classList.add('active', 'bg-redmc-600', 'text-white');
+                btn.classList.remove('bg-redmc-panel', 'text-gray-300');
+
+                const filter = btn.getAttribute('data-filter');
+
+                galleryItems.forEach(item => {
+                    if (filter === 'all' || item.classList.contains(filter)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Lightbox Modal Logic
+        function openModal(title, desc, imgSrc) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-desc').textContent = desc;
+            document.getElementById('modal-img').src = imgSrc;
+            document.getElementById('image-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('image-modal').classList.add('hidden');
+        }
+
+        document.getElementById('image-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'image-modal') {
+                closeModal();
+            }
+        });
+
+        // Live Price Estimator Calculator Logic
+        let selectedBase = 15;
+        const typeBtns = document.querySelectorAll('.calc-type-btn');
+        const addonCheckboxes = document.querySelectorAll('.calc-addon');
+        const totalDisplay = document.getElementById('calc-total');
+
+        typeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                typeBtns.forEach(b => {
+                    b.classList.remove('border-redmc-500', 'text-redmc-500', 'border-2');
+                    b.classList.add('border-redmc-border', 'text-gray-300', 'border');
+                });
+                btn.classList.add('border-redmc-500', 'text-redmc-500', 'border-2');
+                btn.classList.remove('border-redmc-border', 'text-gray-300');
+
+                selectedBase = parseInt(btn.getAttribute('data-val'));
+                calculateTotal();
+            });
+        });
+
+        addonCheckboxes.forEach(cb => {
+            cb.addEventListener('change', calculateTotal);
+        });
+
+        function calculateTotal() {
+            let totalUSD = selectedBase;
+            addonCheckboxes.forEach(cb => {
+                if (cb.checked) {
+                    totalUSD += parseInt(cb.value);
+                }
+            });
+            const approxLKR = Math.round(totalUSD * 150);
+            totalDisplay.innerHTML = `$${totalUSD} <span class="text-xs font-sans text-gray-400 font-normal">(approx. LKR ${approxLKR.toLocaleString()})</span>`;
+        }
+
+        // Copy Discord Username Tag
+        function copyDiscordTag() {
+            const tagText = document.getElementById('discord-tag').innerText;
+            const copyBtnText = document.getElementById('copy-btn-text');
+
+            const tempInput = document.createElement('input');
+            tempInput.value = tagText;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            copyBtnText.textContent = 'Copied!';
+            setTimeout(() => {
+                copyBtnText.textContent = 'Copy';
+            }, 2000);
+        }
+
+        // Order Form Handler
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const alertBox = document.getElementById('form-alert');
+            
+            alertBox.classList.remove('hidden', 'bg-red-900/50', 'text-red-300');
+            alertBox.classList.add('bg-redmc-500/20', 'text-redmc-500', 'border', 'border-redmc-500/50');
+            alertBox.innerHTML = '<i class="fa-solid fa-circle-check mr-2"></i> Thank you! Your request has been sent to DasiYaOfficial. I will contact you shortly.';
+
+            document.getElementById('order-form').reset();
+
+            setTimeout(() => {
+                alertBox.classList.add('hidden');
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
