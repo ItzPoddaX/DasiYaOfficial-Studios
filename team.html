@@ -216,13 +216,43 @@
 </head>
 <body class="min-h-screen relative flex flex-col justify-center items-center py-16 px-4 sm:px-6 lg:px-8">
 
-    <!-- Back Button -->
-    <a href="javascript:history.back()" class="fixed top-6 left-6 z-50 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-950/40 border border-purple-500/30 text-purple-300 hover:text-white hover:bg-purple-500/20 hover:border-purple-400 transition-all duration-300 backdrop-blur-md shadow-lg group">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>
-        <span class="text-xs font-semibold uppercase tracking-wider">Back</span>
-    </a>
+    <!-- Top Navigation Bar / Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-black/40 backdrop-blur-md border-b border-purple-500/20 px-6 py-4 flex items-center justify-between">
+        <!-- Back Button -->
+        <a href="javascript:history.back()" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-950/40 border border-purple-500/30 text-purple-300 hover:text-white hover:bg-purple-500/20 hover:border-purple-400 transition-all duration-300 shadow-lg group">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            <span class="text-xs font-semibold uppercase tracking-wider">Back</span>
+        </a>
+
+        <!-- Header Title -->
+        <h3 class="text-lg sm:text-3xl font-bold tracking-widest text-purple-500 uppercase font-heading">
+            TEAM LK MEMBERS
+        </h3>
+
+        <!-- Music Controller Player -->
+        <div class="flex items-center gap-3 bg-purple-950/60 border border-purple-500/30 px-3 py-1.5 rounded-xl shadow-lg">
+            <audio id="audioPlayer" src="music1.mp3" preload="metadata"></audio>
+            
+            <button id="playBtn" class="p-2 rounded-lg bg-purple-600/50 hover:bg-purple-500 text-white transition-all">
+                <svg id="playIcon" class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+                <svg id="pauseIcon" class="w-4 h-4 fill-current hidden" viewBox="0 0 24 24">
+                    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                </svg>
+            </button>
+
+            <!-- Sound Volume Slider -->
+            <div class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-purple-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072M18.364 5.636a9 9 0 010 12.728M11 5L6 9H2v6h4l5 4V5z"/>
+                </svg>
+                <input id="volumeControl" type="range" min="0" max="1" step="0.01" value="0.7" class="w-16 sm:w-20 accent-purple-500 cursor-pointer">
+            </div>
+        </div>
+    </header>
 
     <!-- Animated Color Orbs -->
     <div class="ambient-orb orb-1"></div>
@@ -248,10 +278,10 @@
         <div class="ember"></div>
     </div>
 
-    <main class="relative z-10 max-w-7xl w-full mx-auto flex flex-col items-center">
+    <main class="relative z-10 max-w-7xl w-full mx-auto flex flex-col items-center mt-16">
 
-        <!-- Header -->
-        <header class="text-center mb-12 md:mb-16 max-w-3xl px-4">
+        <!-- Hero Title Section -->
+        <div class="text-center mb-12 md:mb-16 max-w-3xl px-4">
             <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 mb-4 backdrop-blur-md">
                 <span class="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></span>
                 <span class="text-xs font-semibold tracking-[0.25em] uppercase text-purple-300">
@@ -265,7 +295,7 @@
             <p class="text-slate-300 text-sm sm:text-base md:text-lg font-normal leading-relaxed max-w-xl mx-auto">
                 Creators, builders, developers, and gamers working together to grow the <span class="text-red-400 font-semibold">DasiYa</span> community.
             </p>
-        </header>
+        </div>
 
         <!-- Team Roster Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 w-full max-w-6xl">
@@ -393,5 +423,31 @@
         </div>
     </main>
 
+    <!-- JavaScript to handle audio controls -->
+    <script>
+        const audio = document.getElementById('audioPlayer');
+        const playBtn = document.getElementById('playBtn');
+        const playIcon = document.getElementById('playIcon');
+        const pauseIcon = document.getElementById('pauseIcon');
+        const volumeControl = document.getElementById('volumeControl');
+
+        // Play / Pause Toggle
+        playBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+            } else {
+                audio.pause();
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
+            }
+        });
+
+        // Volume Controller (Sound adu wadi)
+        volumeControl.addEventListener('input', (e) => {
+            audio.volume = e.target.value;
+        });
+    </script>
 </body>
 </html>
